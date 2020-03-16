@@ -1,0 +1,16 @@
+---
+- name: Download k3s script
+  get_url: 
+    url: https://get.k3s.io
+    dest: /tmp/k3s.sh
+    mode: '0755'
+    force: yes
+  environment:
+    INSTALL_K3S_VERSION: v0.9.1
+
+
+- name: Run k3s install script
+  shell: /tmp/k3s.sh
+
+- name: Remove the installer script
+  file: path=/tmp/k3s.sh state=absent

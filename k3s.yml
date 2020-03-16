@@ -1,0 +1,23 @@
+- name: Set common settings
+  hosts: all
+  become: yes
+  roles:
+    - { role: k3s-common }
+
+- name: Provision k3s master node
+  hosts: master
+  become: yes
+  roles:
+    - { role: k3s-master }
+
+- name: Set k3s server config for all nodes
+  hosts: all
+  become: yes
+  roles:
+    - { role: k3s-config }
+
+- name: Provision k3s agent nodes
+  hosts: node
+  become: yes
+  roles:
+    - { role: k3s-node }

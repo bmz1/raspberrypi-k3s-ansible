@@ -1,0 +1,20 @@
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Change password for default user
+      user: 
+        name: pi
+        password: "{{ item.password | default(omit) | password_hash('sha512') }}"
+        state: present
+      with_flattened:
+        - "{{ user }}"
+    - name: Add SSH public key
+      authorized_key:
+        user: "{{ item.name }}"
+        key: "{{ item.ssh_key }}"
+      with_flattened:
+        - "{{ user }}"
+    - name: All done!
+      debug:
+        msg: Success!

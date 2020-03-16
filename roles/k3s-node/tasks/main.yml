@@ -1,0 +1,41 @@
+- name: Download k3s script
+  get_url: 
+    url: https://get.k3s.io
+    dest: /tmp/k3s.sh
+    mode: '0755'
+    force: yes
+  environment:
+    INSTALL_K3S_VERSION: v0.9.1
+
+- name: Run k3s install script
+  shell: /tmp/k3s.sh
+  environment:
+    K3S_URL: "{{ k3s_server_address}}"
+    K3S_TOKEN: "{{ k3s_cluster_token }}"
+
+- name: Remove the installer script
+  file: path=/tmp/k3s.sh state=absent
+
+
+# - name: Install k3s agent service
+#   get_url:
+#     url: https://raw.githubusercontent.com/rancher/k3s/master/k3s.service
+#     dest: /etc/systemd/system/k3s-agent.service
+#     mode: a+x
+#     force: yes
+
+# - name: Replace server command in k3s agent service with agent command
+#   replace:
+#     path: /etc/systemd/system/k3s-agent.service
+#     regexp: '^ExecStart=/usr/local/bin/k3s server$'
+#     replace: 'ExecStart=/usr/local/bin/k3s agent -s "{{ k3s_server_address}}" -t "{{ k3s_cluster_token }}"'
+
+# - name: Reload systemd daemon to ensure latest service config
+#   systemd:
+#     daemon_reload: yes
+
+# - name: Enable and start the k3s agent service
+#   service:
+#     name: k3s-agent
+#     enabled: yes
+#     state: started

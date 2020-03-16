@@ -1,0 +1,20 @@
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Groups
+      debug:
+        var: groups['all']
+    - name: Edit hosts file
+      hostname:
+        
+    - name: restart machine
+      command: shutdown -r now
+      async: 0
+      poll: 0
+      ignore_errors: True
+      when:
+          reboot is defined
+
+    - name: Waiting for server to come back up
+      local_action: wait_for host="{{ inventory_hostname }}" port=22 state=started

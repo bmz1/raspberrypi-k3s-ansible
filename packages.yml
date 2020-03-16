@@ -1,0 +1,18 @@
+- hosts: all
+  become: yes
+  vars:
+    packages:
+    - vim
+    - wget
+    - curl
+    - htop
+
+  tasks:
+    - name: Ensure a list of packages installed
+      apt:
+        name: "{{ packages }}"
+        state: present
+      when: packages is defined
+    - name: All done!
+      debug:
+        msg: Packages have been successfully installed
